@@ -1,11 +1,10 @@
-import { Agent, handoff, guardrail } from '@openai/agents';
+import { Agent, handoff } from '@openai/agents';
 import { calculatorTool, wordCounterTool } from './tools.js';
 
 // --- Input Guardrail ---
 // Blocks messages that are clearly inappropriate or harmful before routing.
-const safetyGuardrail = guardrail({
+const safetyGuardrail = {
   name: 'safety_check',
-  description: 'Blocks inappropriate, offensive, or harmful user input.',
   execute: async ({ input }) => {
     const text = typeof input === 'string' ? input : JSON.stringify(input);
     const blocked = /(hate|kill|harm|abuse|nsfw|porn|illegal|drug|weapon)/i.test(text);
@@ -17,7 +16,7 @@ const safetyGuardrail = guardrail({
     }
     return { tripwireTriggered: false };
   },
-});
+};
 
 // --- Domain Agents ---
 
